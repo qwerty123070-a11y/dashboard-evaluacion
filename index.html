@@ -154,7 +154,13 @@ async function cargarTodo() {
 }
 
 async function cargarIDMA() {
-  const res = await fetch(`${API_URL}?action=getIDMA`);
+  let res;
+  try {
+    res = await fetch(`${API_URL}?action=getIDMA`, { method: 'GET', redirect: 'follow' });
+  } catch (err) {
+    throw new Error('No se pudo conectar (CORS/red): ' + err.message);
+  }
+  if (!res.ok) throw new Error('HTTP ' + res.status);
   const datos = await res.json();
   if (datos.error) throw new Error(datos.error);
 
